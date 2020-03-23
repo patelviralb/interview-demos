@@ -7,7 +7,7 @@ const HomeComponent = () =>
         <div className={'row'}>
           <div className={'col-lg-4'}></div>
           <div className={'col-lg-4 col-12'}>
-            <Link className={'btn btn-success'} to={'/field-builder'}>
+            <Link className={'btn btn-success'} to={'/form-builder'}>
               Start Building Form
             </Link>
           </div>

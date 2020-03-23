@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
 import Home from '../components/home';
-import FieldBuilder from '../components/fieldBuilder';
+import FormBuilder from '../components/formBuilder';
 
 class AppRouter extends Component {
   render() {
@@ -15,9 +15,9 @@ class AppRouter extends Component {
             />
 
             <Route
-                path={'/field-builder'}
+                path={'/form-builder'}
                 exact={true}
-                component={FieldBuilder}
+                component={FormBuilder}
             />
 
             <Route
