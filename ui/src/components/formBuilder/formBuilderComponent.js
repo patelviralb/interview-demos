@@ -1,8 +1,9 @@
 import React from 'react'
 
-import Navbar from './navbar';
 import {Link} from "react-router-dom";
 import './formBuilderStyle.css';
+import FieldBuilder from './fieldBuilder'
+import FieldPreview from "./fieldPreview/fieldPreviewComponent";
 
 const FormBuilderComponent = () =>
     <div className={'container-fluid'}>
@@ -12,19 +13,13 @@ const FormBuilderComponent = () =>
         </Link>
       </div>
       <div className={'row m-2 no-gutter'}>
-        <div className={'col-lg-6 col-md-12 border border-dark rounded no-gutter vp-form-builder-row-height'}>
-          <div className={'row'}>
-            <div className={'col-12 bg-secondary'}>
-              <label className={'text-white'}>Field Builder</label>
-            </div>
-          </div>
+        <div
+            className={'col-lg-6 col-md-12 border border-dark rounded no-gutter vp-form-builder-row-height'}>
+          <FieldBuilder/>
         </div>
-        <div className={'col-lg-6 col-md-12 border border-dark rounded no-gutter vp-form-builder-row-height'}>
-          <div className={'row'}>
-            <div className={'col-12 bg-secondary'}>
-              <label className={'text-white'}>Preview</label>
-            </div>
-          </div>
+        <div
+            className={'col-lg-6 col-md-12 border border-dark rounded no-gutter vp-form-builder-row-height'}>
+          <FieldPreview/>
         </div>
       </div>
     </div>;
