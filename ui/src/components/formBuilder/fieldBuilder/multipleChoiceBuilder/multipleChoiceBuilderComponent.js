@@ -12,6 +12,8 @@ import {
 import {Link} from "react-router-dom";
 import FieldDataService from "../../../../services";
 
+import '../../fieldPreview/multipleChoicePreview/multipleChoicePreviewComponent.css'
+
 const sleep = (time) => {
   return new Promise((resolve) => setTimeout(resolve, time));
 };
@@ -195,14 +197,44 @@ const MultipleChoiceBuilderComponent = ({fieldData, clearFormFieldData, editLabe
           {
             fieldData.choices
             &&
-            fieldData.choices.map((eachChoice, index) => {
+            fieldData.choices
+            .sort((choiceOne, choiceTwo) => choiceOne.choice_value
+                > choiceTwo.choice_value)
+            .map((eachChoice, index) => {
+              if (eachChoice.choice_value.length > 40) {
+                return (
+                    <div key={index} className={'row'}>
+                      <div
+                          className={'col-1 d-flex justify-content-center'}>
+                        <i className={'fa fa-trash-alt text-danger'}
+                           onClick={() => removeChoice(eachChoice)}></i>
+                      </div>
+                      <div className={'col-11'}>
+                        <label
+                            className={'form-check-label text-wrap vp-word-break'}>
+                          <span>{eachChoice.choice_value.substring(0,
+                              41)}</span>
+                          <span
+                              className={'text-danger'}>{eachChoice.choice_value.substring(
+                              41)}</span>
+                        </label>
+                      </div>
+                    </div>
+                );
+              }
               return (
-                  <div key={index} className={'form-group'}>
-                    <i className={'fa fa-trash-alt text-danger mr-2'}
-                       onClick={() => removeChoice(eachChoice)}></i>
-                    <label className={'form-check-label'}>
-                      {eachChoice.choice_value}
-                    </label>
+                  <div key={index} className={'row'}>
+                    <div
+                        className={'col-1 d-flex justify-content-end'}>
+                      <i className={'fa fa-trash-alt text-danger'}
+                         onClick={() => removeChoice(eachChoice)}></i>
+                    </div>
+                    <div className={'col-11 d-flex justify-content-start'}>
+                      <label
+                          className={'form-check-label text-wrap vp-word-break'}>
+                        {eachChoice.choice_value}
+                      </label>
+                    </div>
                   </div>
               );
             })
@@ -285,7 +317,7 @@ const dispatchMapper = (dispatch) => {
     },
     postData: (fieldData) => {
       FieldDataService.postFieldData(fieldData).then(status =>
-          console.log("Field Data which was posted:",{fieldData})
+          console.log("Field Data which was posted:", {fieldData})
       )
     }
   };
