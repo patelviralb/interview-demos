@@ -4,17 +4,20 @@ import {connect} from "react-redux";
 const MultipleChoicePreviewComponent = ({fieldData}) =>
     <div>
       <div className={'row m-2'}>
-        <div className={'col-4'}>
+        <div className={'col-4 text-truncate'}>
           {fieldData.label}
         </div>
         <div className={'col-8'}>
 
           {
-            fieldData.choices.map((eachChoice,index) => {
+            fieldData.choices
+            &&
+            fieldData.choices.map((eachChoice, index) => {
               return (
                   <div className={'form-check'} key={index}>
                     <input className={'form-check-input'} type={'checkbox'}
-                           id={index} checked={eachChoice.choice_value === fieldData.default_value}/>
+                           id={index} checked={eachChoice.choice_value
+                    === fieldData.default_value}/>
                     <label className={'form-check-label'}
                            htmlFor={index}>
                       {eachChoice.choice_value}

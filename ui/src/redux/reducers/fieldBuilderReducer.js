@@ -1,4 +1,8 @@
-import {CREATE_FIELD, SAVE_FIELD} from '../actions/createFields';
+import {
+  CLEAR_FIELD_DATA,
+  SAVE_FIELD,
+  UPDATE_FIELD_LABEL
+} from '../actions/fieldsActions';
 
 const initialState = {
   fieldData: {
@@ -29,6 +33,28 @@ const fieldBuilderReducer = (state = initialState, action) => {
           action.fieldData
         ]
       };*/
+
+    case CLEAR_FIELD_DATA:
+      return {
+        ...state,
+        fieldData: {
+          "label": "",
+          "type": "multi-select",
+          "required": false,
+          "default_value": "",
+          "choices": [],
+          "order": "alphabetical"
+        }
+      };
+
+    case UPDATE_FIELD_LABEL:
+      return {
+        ...state,
+        fieldData: {
+          ...state.fieldData,
+          "label": action.fieldLabel
+        }
+      };
 
     case SAVE_FIELD:
       console.log('DEBUG: Inside', SAVE_FIELD, 'in reducer');
