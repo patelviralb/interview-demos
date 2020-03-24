@@ -147,7 +147,6 @@ const fieldBuilderReducer = (state = initialState, action) => {
       };
 
     case SAVE_FIELD:
-      console.log('DEBUG: Inside', SAVE_FIELD, 'in reducer');
       return state;
 
     default:

@@ -13,6 +13,7 @@ import {Link} from "react-router-dom";
 import FieldDataService from "../../../../services";
 
 import '../../fieldPreview/multipleChoicePreview/multipleChoicePreviewComponent.css'
+import SubmitButtonComponent from "../../button/submitButtonComponent";
 
 const sleep = (time) => {
   return new Promise((resolve) => setTimeout(resolve, time));
@@ -27,7 +28,7 @@ const addChoiceToList = (editChoices, fieldData) => {
 
   if (fieldData.choices.length === 50) {
     displayWarning("Cannot add more than 50 choices.");
-  } else if (choiceValue.trim() === defaultValue) {
+  } else if (choiceValue.trim() !== "" && (choiceValue.trim() === defaultValue)) {
     displayWarning("Default value present. Cannot add same value again.");
   } else if (existingChoice.length !== 0) {
     displayWarning("Value is present. Cannot add same value again.");
@@ -168,7 +169,7 @@ const MultipleChoiceBuilderComponent = ({fieldData, clearFormFieldData, editLabe
           <input className={'form-control'} id={'vp-default-value'}
                  name={'vp-default-value'}
                  onBlur={(event) =>
-                     editDefaultValue(event.target.value, true)}
+                     editDefaultValue(event.target.value.trim(), true)}
                  onChange={(event) =>
                      editDefaultValue(event.target.value, false)}
                  value={fieldData.default_value}
@@ -259,16 +260,15 @@ const MultipleChoiceBuilderComponent = ({fieldData, clearFormFieldData, editLabe
       </div>
 
       <div className={'row m-2 d-flex justify-content-center'}>
-        <button className={' btn btn-success'}
-                onClick={() => saveFieldData(postData, fieldData)}
-        >
-          Save Changes
-        </button>
-        <button className={' ml-2 btn btn-warning'}
+        <SubmitButtonComponent
+            buttonName={'Save Changes'}
+            onClickFunction={() => saveFieldData(postData, fieldData)}
+        />
+        <button className={'ml-2 btn btn-warning'}
                 onClick={() => clearFormFieldData()}>
           Clear
         </button>
-        <Link className={' ml-2 btn btn-danger'} to={'/home'}>
+        <Link className={'ml-2 btn btn-danger'} to={'/home'}>
           Cancel
         </Link>
       </div>
@@ -297,7 +297,7 @@ const dispatchMapper = (dispatch) => {
     editDefaultValue: (defaultValue, postChanges) => {
       if (postChanges) {
         if (defaultValue !== "") {
-          dispatch(updateChoicesWithDefaultValue(defaultValue.trim()));
+          dispatch(updateChoicesWithDefaultValue(defaultValue));
         }
       } else {
         dispatch(updateDefaultValue(defaultValue));
