@@ -9,13 +9,13 @@ class AppRouter extends Component {
         <BrowserRouter>
           <Switch>
             <Route
-                path={'/home'}
+                path="/home"
                 exact={true}
                 component={Home}
             />
 
             <Route
-                path={'/form-builder'}
+                path="/form-builder"
                 exact={true}
                 component={FormBuilder}
             />
