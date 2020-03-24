@@ -1,6 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import {clearFieldData, updateLabel} from "../../../../redux/actions/fieldsActions";
+import {
+  clearFieldData,
+  updateLabel,
+  updateDefaultValue,
+  updateChoicesWithDefaultValue
+} from "../../../../redux/actions/fieldsActions";
 import {Link} from "react-router-dom";
 
 const renderDefaultValue = (fieldData) => {
@@ -37,8 +42,8 @@ class MultipleChoiceBuilderComponent extends Component {
               <input className={'form-control'} id={'vp-field-label'}
                      name={'vp-field-label'}
                      value={this.props.fieldData.label}
-                     onChange={(event) => this.props.editLabel(
-                         event.target.value)}
+                     onChange={(event) =>
+                         this.props.editLabel(event.target.value)}
               />
             </div>
           </div>
@@ -58,10 +63,29 @@ class MultipleChoiceBuilderComponent extends Component {
             <div className={'col-4'}></div>
             <div className={'col-8'}>
               <div className={'form-check form-check-inline'}>
-                <input className={'form-check-input'} type={'checkbox'}
-                       id={'vp-required-check'} value={'required'}
-                       name={'vp-required-check'}
-                       checked={this.props.fieldData.required}/>
+                {
+                  this.props.fieldData.required
+                  &&
+                  <input className={'form-check-input'} type={'checkbox'}
+                         id={'vp-required-check'}
+                         name={'vp-required-check'}
+                         checked={true}
+                         onChange={(event) =>
+                             this.props.editRequiredValidation(
+                                 event.target.checked)}
+                  />
+                }
+                {
+                  !this.props.fieldData.required
+                  &&
+                  <input className={'form-check-input'} type={'checkbox'}
+                         id={'vp-required-check'}
+                         name={'vp-required-check'}
+                         onChange={(event) =>
+                             this.props.editRequiredValidation(
+                                 event.target.checked)}
+                  />
+                }
                 <label className={'form-check-label'}
                        htmlFor={'vp-required-check'}>
                   A value is required
@@ -75,8 +99,19 @@ class MultipleChoiceBuilderComponent extends Component {
               <label htmlFor={'vp-default-value'}>Default Value</label>
             </div>
             <div className={'col-8'}>
+              {/*<input className={'form-control'} id={'vp-default-value'}
+                     name={'vp-default-value'}
+                     onChange={(event) =>
+                         this.props.editDefaultValue(event.target.value)}
+                     onfocusout={(event) =>
+                         this.props.editDefaultValue(event.target.value)}
+                     value={this.props.fieldData.default_value}/>*/}
               <input className={'form-control'} id={'vp-default-value'}
                      name={'vp-default-value'}
+                     onBlur={(event) =>
+                         this.props.editDefaultValue(event.target.value, true)}
+                     onChange={(event) =>
+                         this.props.editDefaultValue(event.target.value, false)}
                      value={this.props.fieldData.default_value}/>
             </div>
           </div>
@@ -88,6 +123,12 @@ class MultipleChoiceBuilderComponent extends Component {
             <div className={'col-8'}>
           <textarea className={'form-control'} id={'vp-choices'} rows={'4'}
                     name={'vp-choices'}
+                    onChange={(event) => {
+                      if (event.target.value.charAt(
+                          event.target.value.length - 1) === '\n') {
+                        this.props.editChoices(event.target.value)
+                      }
+                    }}
           >
           </textarea>
             </div>
@@ -100,6 +141,7 @@ class MultipleChoiceBuilderComponent extends Component {
             <div className={'col-8'}>
               <select className={'form-control'} id={'vp-order'}
                       name={'vp-order'}
+                      onChange={() => this.props.editOrder()}
                       value={this.props.fieldData.order}>
                 <option value={'alphabetical'}>
                   Display choices in Alphabetical order
@@ -139,6 +181,27 @@ const dispatchMapper = (dispatch) => {
     },
     editLabel: (fieldLabel) => {
       dispatch(updateLabel(fieldLabel));
+    },
+    editRequiredValidation: (isChecked) => {
+      //DO SOMETHING
+      console.log("DEBUG: Checked", isChecked);
+    },
+    editDefaultValue: (defaultValue, postChanges) => {
+      if (postChanges) {
+        if(defaultValue !== "") {
+          dispatch(updateChoicesWithDefaultValue(defaultValue));
+        }
+      } else {
+        dispatch(updateDefaultValue(defaultValue));
+      }
+    },
+    editChoices: (choices) => {
+      let choicesArray = choices.split('\n');
+      let choicesLength = choicesArray.length;
+      console.log('DEBUG: editChoice', choicesArray[choicesLength - 2]);
+    },
+    editOrder: () => {
+      //DO NOTHING
     }
   };
 };

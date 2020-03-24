@@ -1,5 +1,7 @@
 export const CLEAR_FIELD_DATA = "CLEAR_FIELD_DATA";
 export const UPDATE_FIELD_LABEL = "UPDATE_FIELD_LABEL";
+export const UPDATE_FIELD_DEFAULT_VALUE = "UPDATE_FIELD_DEFAULT_VALUE";
+export const UPDATE_FIELD_DEFAULT_VALUE_CHOICE = "UPDATE_FIELD_DEFAULT_VALUE_CHOICE";
 export const SAVE_FIELD = "SAVE_FIELD";
 
 export const clearFieldData = () => ({
@@ -9,4 +11,14 @@ export const clearFieldData = () => ({
 export const updateLabel = (fieldLabel) => ({
   type: UPDATE_FIELD_LABEL,
   fieldLabel: fieldLabel
+});
+
+export const updateDefaultValue = (defaultValue) => ({
+  type: UPDATE_FIELD_DEFAULT_VALUE,
+  defaultValue: defaultValue
+});
+
+export const updateChoicesWithDefaultValue = (defaultValue) => ({
+  type: UPDATE_FIELD_DEFAULT_VALUE_CHOICE,
+  defaultValue: defaultValue
 });

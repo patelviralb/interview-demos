@@ -16,8 +16,11 @@ const MultipleChoicePreviewComponent = ({fieldData}) =>
               return (
                   <div className={'form-check'} key={index}>
                     <input className={'form-check-input'} type={'checkbox'}
-                           id={index} checked={eachChoice.choice_value
-                    === fieldData.default_value}/>
+                           id={index}
+                           checked={eachChoice.choice_value
+                           === fieldData.default_value}
+                           readOnly
+                    />
                     <label className={'form-check-label'}
                            htmlFor={index}>
                       {eachChoice.choice_value}

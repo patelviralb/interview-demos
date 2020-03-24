@@ -1,7 +1,9 @@
 import {
   CLEAR_FIELD_DATA,
   SAVE_FIELD,
-  UPDATE_FIELD_LABEL
+  UPDATE_FIELD_LABEL,
+  UPDATE_FIELD_DEFAULT_VALUE,
+  UPDATE_FIELD_DEFAULT_VALUE_CHOICE
 } from '../actions/fieldsActions';
 
 const initialState = {
@@ -12,9 +14,11 @@ const initialState = {
     "default_value": "Value 01",
     "choices": [
       {
+        "index": 1,
         "choice_value": "Value 01"
       },
       {
+        "index": 2,
         "choice_value": "Value 02"
       }
     ],
@@ -24,15 +28,15 @@ const initialState = {
 
 const fieldBuilderReducer = (state = initialState, action) => {
   switch (action.type) {
-    /*case CREATE_FIELD:
-      console.log('DEBUG: Inside', CREATE_FIELD, 'in reducer');
-      return {
-        ...state,
-        fieldsList: [
-          ...state.fieldsList,
-          action.fieldData
-        ]
-      };*/
+      /*case CREATE_FIELD:
+        console.log('DEBUG: Inside', CREATE_FIELD, 'in reducer');
+        return {
+          ...state,
+          fieldsList: [
+            ...state.fieldsList,
+            action.fieldData
+          ]
+        };*/
 
     case CLEAR_FIELD_DATA:
       return {
@@ -53,6 +57,30 @@ const fieldBuilderReducer = (state = initialState, action) => {
         fieldData: {
           ...state.fieldData,
           "label": action.fieldLabel
+        }
+      };
+
+    case UPDATE_FIELD_DEFAULT_VALUE_CHOICE:
+      return {
+        ...state,
+        fieldData: {
+          ...state.fieldData,
+          "default_value": action.defaultValue,
+          "choices":[
+              ...state.fieldData.choices,
+            {
+              "choice_value": action.defaultValue
+            }
+          ]
+        }
+      };
+
+    case UPDATE_FIELD_DEFAULT_VALUE:
+      return {
+        ...state,
+        fieldData: {
+          ...state.fieldData,
+          "default_value": action.defaultValue
         }
       };
 
