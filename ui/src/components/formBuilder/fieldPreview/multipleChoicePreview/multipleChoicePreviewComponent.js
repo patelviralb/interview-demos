@@ -1,58 +1,43 @@
 import React from 'react';
+import {connect} from "react-redux";
 
-const MultipleChoicePreviewComponent = () =>
+const MultipleChoicePreviewComponent = ({fieldData}) =>
     <div>
       <div className={'row m-2'}>
         <div className={'col-4'}>
-          Label
+          {fieldData.label}
         </div>
         <div className={'col-8'}>
 
-          <div className={'form-check'}>
-            <input className={'form-check-input'} type={'checkbox'}
-                   id={'defaultCheck1'}/>
-            <label className={'form-check-label'} htmlFor={'defaultCheck1'}>
-              Default checkbox
-            </label>
-          </div>
-          <div className={'form-check'}>
-            <input className={'form-check-input'} type={'checkbox'}
-                   id={'defaultCheck1'}/>
-            <label className={'form-check-label'} htmlFor={'defaultCheck1'}>
-              Default checkbox
-            </label>
-          </div>
-          <div className={'form-check'}>
-            <input className={'form-check-input'} type={'checkbox'}
-                   id={'defaultCheck1'}/>
-            <label className={'form-check-label'} htmlFor={'defaultCheck1'}>
-              Default checkbox
-            </label>
-          </div>
-          <div className={'form-check'}>
-            <input className={'form-check-input'} type={'checkbox'}
-                   id={'defaultCheck1'}/>
-            <label className={'form-check-label'} htmlFor={'defaultCheck1'}>
-              Default checkbox
-            </label>
-          </div>
-          <div className={'form-check'}>
-            <input className={'form-check-input'} type={'checkbox'}
-                   id={'defaultCheck1'}/>
-            <label className={'form-check-label'} htmlFor={'defaultCheck1'}>
-              Default checkbox
-            </label>
-          </div>
-          <div className={'form-check'}>
-            <input className={'form-check-input'} type={'checkbox'}
-                   id={'defaultCheck1'}/>
-            <label className={'form-check-label'} htmlFor={'defaultCheck1'}>
-              Default checkbox
-            </label>
-          </div>
+          {
+            fieldData.choices.map((eachChoice,index) => {
+              return (
+                  <div className={'form-check'} key={index}>
+                    <input className={'form-check-input'} type={'checkbox'}
+                           id={index} checked={eachChoice.choice_value === fieldData.default_value}/>
+                    <label className={'form-check-label'}
+                           htmlFor={index}>
+                      {eachChoice.choice_value}
+                    </label>
+                  </div>
+              );
+            })
+          }
 
         </div>
       </div>
-    </div>;
+    </div>
+;
 
-export default MultipleChoicePreviewComponent;
+const stateMapper = (state) => {
+  return {
+    fieldData: state.field.fieldData
+  };
+};
+
+const dispatchMapper = (dispatch) => {
+  return {};
+};
+
+export default connect(stateMapper, dispatchMapper)(
+    MultipleChoicePreviewComponent);
