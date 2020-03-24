@@ -10,13 +10,30 @@ import {
 } from "../../../../redux/actions/fieldsActions";
 import {Link} from "react-router-dom";
 
-const addChoiceToList = (editChoices) => {
+const sleep = (time) => {
+  return new Promise((resolve) => setTimeout(resolve, time));
+};
+
+const addChoiceToList = (editChoices, fieldData) => {
   const choiceValue = document.getElementById('vp-field-choice').value;
   const defaultValue = document.getElementById('vp-default-value').value;
-  if (choiceValue.trim() !== '') {
+
+  const existingChoice = fieldData.choices.filter(eachChoice => eachChoice.choice_value === choiceValue);
+
+  if (choiceValue.trim() === defaultValue) {
+    document.getElementById('vp-error-row').classList.remove('d-none');
+    document.getElementById(
+        'vp-error-message').innerHTML = "Default value present. Cannot add same value again.";
+    sleep(2000).then(
+        () => document.getElementById('vp-error-row').classList.add('d-none'));
+  } else if(existingChoice.length !== 0) {
+    document.getElementById('vp-error-row').classList.remove('d-none');
+    document.getElementById(
+        'vp-error-message').innerHTML = "Value is present. Cannot add same value again.";
+    sleep(2000).then(
+        () => document.getElementById('vp-error-row').classList.add('d-none'));
+  } else if (choiceValue.trim() !== '') {
     editChoices(choiceValue.trim());
-  } else if (choiceValue.trim() === defaultValue) {
-    document.getElementById('vp-error-division').innerText = "LOL"
   }
   document.getElementById('vp-field-choice').value = "";
 };
@@ -24,13 +41,20 @@ const addChoiceToList = (editChoices) => {
 const MultipleChoiceBuilderComponent = ({fieldData, clearFormFieldData, editLabel, editRequiredValidation, editDefaultValue, editChoices, removeChoice, editOrder}) =>
     <div className={'border border-warning rounded mt-2 mb-4'}>
 
-      <div className={'row m-2'}>
+      <div className={'row m-2 alert alert-warning d-none'} id={'vp-error-row'}>
         <div
-            className={'col-12 alert alert-warning d-flex justify-content-center mt-2'}
+            className={'col-12 d-flex justify-content-center'}
             role={'alert'}
             id={'vp-error-division'}
         >
-          Start adding fields from here.
+          <i className="fas fa-exclamation-triangle"></i>
+        </div>
+        <div
+            className={'col-12 d-flex justify-content-center'}
+            role={'alert'}
+            id={'vp-error-message'}
+        >
+          Error goes here.
         </div>
       </div>
 
@@ -117,10 +141,10 @@ const MultipleChoiceBuilderComponent = ({fieldData, clearFormFieldData, editLabe
         <div className={'col-8 d-flex justify-content-center'}>
           <input className={'form-control'} id={'vp-field-choice'}
                  name={'vp-field-choice'}/>
-          <label className={'btn btn-outline-success ml-1'}
-                 onClick={() => addChoiceToList(editChoices)}>
+          <button className={'btn btn-outline-success ml-1'}
+                  onClick={() => addChoiceToList(editChoices, fieldData)}>
             <i className={'fa fa-plus'}></i>
-          </label>
+          </button>
         </div>
       </div>
       <div className={'row m-2'}>

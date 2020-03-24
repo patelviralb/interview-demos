@@ -29,16 +29,6 @@ const initialState = {
 
 const fieldBuilderReducer = (state = initialState, action) => {
   switch (action.type) {
-      /*case CREATE_FIELD:
-        console.log('DEBUG: Inside', CREATE_FIELD, 'in reducer');
-        return {
-          ...state,
-          fieldsList: [
-            ...state.fieldsList,
-            action.fieldData
-          ]
-        };*/
-
     case CLEAR_FIELD_DATA:
       return {
         ...state,
@@ -97,7 +87,6 @@ const fieldBuilderReducer = (state = initialState, action) => {
       const defaultValuesInChoices = state.fieldData.choices.filter(
           choice => choice.choice_value === action.defaultValue
               || choice.choice_value === action.choiceToAdd.choice_value);
-      console.log("DEBUG: UPDATE_FIELD_CHOICE", defaultValuesInChoices);
 
       if (defaultValuesInChoices.length === 0) {
         return {
