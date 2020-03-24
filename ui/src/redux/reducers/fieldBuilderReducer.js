@@ -3,7 +3,7 @@ import {
   SAVE_FIELD,
   UPDATE_FIELD_LABEL,
   UPDATE_FIELD_DEFAULT_VALUE,
-  UPDATE_FIELD_DEFAULT_VALUE_CHOICE
+  UPDATE_FIELD_DEFAULT_VALUE_CHOICE, UPDATE_FIELD_CHOICE, DELETE_FIELD_CHOICE
 } from '../actions/fieldsActions';
 
 const initialState = {
@@ -14,12 +14,13 @@ const initialState = {
     "default_value": "Value 01",
     "choices": [
       {
-        "index": 1,
         "choice_value": "Value 01"
       },
       {
-        "index": 2,
         "choice_value": "Value 02"
+      },
+      {
+        "choice_value": "Value 03"
       }
     ],
     "order": "alphabetical"
@@ -61,18 +62,26 @@ const fieldBuilderReducer = (state = initialState, action) => {
       };
 
     case UPDATE_FIELD_DEFAULT_VALUE_CHOICE:
-      return {
-        ...state,
-        fieldData: {
-          ...state.fieldData,
-          "default_value": action.defaultValue,
-          "choices":[
+      const defaultValuesFromArray = state.fieldData.choices.filter(
+          choice => choice.choice_value === action.defaultValue);
+
+      if (defaultValuesFromArray.length === 0) {
+        return {
+          ...state,
+          fieldData: {
+            ...state.fieldData,
+            "default_value": action.defaultValue,
+            "choices": [
               ...state.fieldData.choices,
-            {
-              "choice_value": action.defaultValue
-            }
-          ]
-        }
+              {
+                "choice_value": action.defaultValue
+              }
+            ]
+          }
+        };
+      }
+      return {
+        ...state
       };
 
     case UPDATE_FIELD_DEFAULT_VALUE:
@@ -81,6 +90,60 @@ const fieldBuilderReducer = (state = initialState, action) => {
         fieldData: {
           ...state.fieldData,
           "default_value": action.defaultValue
+        }
+      };
+
+    case UPDATE_FIELD_CHOICE:
+      const defaultValuesInChoices = state.fieldData.choices.filter(
+          choice => choice.choice_value === action.defaultValue
+              || choice.choice_value === action.choiceToAdd.choice_value);
+      console.log("DEBUG: UPDATE_FIELD_CHOICE", defaultValuesInChoices);
+
+      if (defaultValuesInChoices.length === 0) {
+        return {
+          ...state,
+          fieldData: {
+            ...state.fieldData,
+            "choices": [
+              ...state.fieldData.choices,
+              action.choiceToAdd
+            ]
+          }
+        };
+      }
+      return {
+        ...state
+      };
+      /*return {
+        ...state,
+        fieldData: {
+          ...state.fieldData,
+          "choices": [
+            ...state.fieldData.choices,
+            action.choiceToAdd
+          ]
+        }
+      };*/
+
+    case DELETE_FIELD_CHOICE:
+      if (action.choiceToDelete.choice_value
+          === state.fieldData.default_value) {
+        return {
+          ...state,
+          fieldData: {
+            ...state.fieldData,
+            "default_value": "",
+            "choices": state.fieldData.choices.filter(
+                choice => choice !== action.choiceToDelete),
+          }
+        };
+      }
+      return {
+        ...state,
+        fieldData: {
+          ...state.fieldData,
+          "choices": state.fieldData.choices.filter(
+              choice => choice !== action.choiceToDelete),
         }
       };
 

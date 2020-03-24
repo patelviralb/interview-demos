@@ -9,26 +9,26 @@ const MultipleChoicePreviewComponent = ({fieldData}) =>
         </div>
         <div className={'col-8'}>
 
-          {
-            fieldData.choices
-            &&
-            fieldData.choices.map((eachChoice, index) => {
-              return (
-                  <div className={'form-check'} key={index}>
-                    <input className={'form-check-input'} type={'checkbox'}
-                           id={index}
-                           checked={eachChoice.choice_value
-                           === fieldData.default_value}
-                           readOnly
-                    />
-                    <label className={'form-check-label'}
-                           htmlFor={index}>
-                      {eachChoice.choice_value}
-                    </label>
-                  </div>
-              );
-            })
-          }
+            {
+              fieldData.choices
+              &&
+              fieldData.choices.map((eachChoice, index) => {
+                return (
+                    <div className={'form-check'} key={index}>
+                      <input className={'form-check-input'} type={'checkbox'}
+                             id={index}
+                             checked={eachChoice.choice_value
+                             === fieldData.default_value}
+                             readOnly
+                      />
+                      <label className={'form-check-label'}
+                             htmlFor={index}>
+                        {eachChoice.choice_value}
+                      </label>
+                    </div>
+                );
+              })
+            }
 
         </div>
       </div>
