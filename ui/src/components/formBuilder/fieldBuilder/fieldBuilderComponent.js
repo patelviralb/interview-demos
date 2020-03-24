@@ -17,7 +17,7 @@ const FieldBuilderComponent = () =>
         <div>
             <MultipleChoiceBuilder />
         </div>
-        <div className={'d-flex justify-content-center'}>
+        <div className={'d-flex justify-content-center mb-2'}>
           <button className={'btn btn-secondary'} disabled={true}>
             <i className={'fa fa-plus'}></i>
           </button>

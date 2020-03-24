@@ -1,4 +1,4 @@
 .vp-form-builder-row-height {
-  height: 90vh;
+  min-height: 90vh;
   width: 100%;
 }

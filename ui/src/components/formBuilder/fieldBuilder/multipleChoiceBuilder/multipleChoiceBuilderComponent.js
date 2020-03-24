@@ -20,22 +20,24 @@ const addChoiceToList = (editChoices, fieldData) => {
 
   const existingChoice = fieldData.choices.filter(eachChoice => eachChoice.choice_value === choiceValue);
 
-  if (choiceValue.trim() === defaultValue) {
-    document.getElementById('vp-error-row').classList.remove('d-none');
-    document.getElementById(
-        'vp-error-message').innerHTML = "Default value present. Cannot add same value again.";
-    sleep(2000).then(
-        () => document.getElementById('vp-error-row').classList.add('d-none'));
+  if(fieldData.choices.length === 50) {
+    displayError("Cannot add more than 50 choices.");
+  } else if (choiceValue.trim() === defaultValue) {
+    displayError("Default value present. Cannot add same value again.");
   } else if(existingChoice.length !== 0) {
-    document.getElementById('vp-error-row').classList.remove('d-none');
-    document.getElementById(
-        'vp-error-message').innerHTML = "Value is present. Cannot add same value again.";
-    sleep(2000).then(
-        () => document.getElementById('vp-error-row').classList.add('d-none'));
+    displayError("Value is present. Cannot add same value again.");
   } else if (choiceValue.trim() !== '') {
     editChoices(choiceValue.trim());
   }
   document.getElementById('vp-field-choice').value = "";
+};
+
+const displayError = (message) => {
+  document.getElementById('vp-error-row').classList.remove('d-none');
+  document.getElementById(
+      'vp-error-message').innerHTML = message;
+  sleep(2000).then(
+      () => document.getElementById('vp-error-row').classList.add('d-none'));
 };
 
 const MultipleChoiceBuilderComponent = ({fieldData, clearFormFieldData, editLabel, editRequiredValidation, editDefaultValue, editChoices, removeChoice, editOrder}) =>
