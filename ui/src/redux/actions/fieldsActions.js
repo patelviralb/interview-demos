@@ -1,5 +1,6 @@
 export const CLEAR_FIELD_DATA = "CLEAR_FIELD_DATA";
 export const UPDATE_FIELD_LABEL = "UPDATE_FIELD_LABEL";
+export const UPDATE_FIELD_IS_REQUIRED = "UPDATE_FIELD_IS_REQUIRED";
 export const UPDATE_FIELD_DEFAULT_VALUE = "UPDATE_FIELD_DEFAULT_VALUE";
 export const UPDATE_FIELD_DEFAULT_VALUE_CHOICE = "UPDATE_FIELD_DEFAULT_VALUE_CHOICE";
 export const UPDATE_FIELD_CHOICE = "UPDATE_FIELD_CHOICE";
@@ -13,6 +14,11 @@ export const clearFieldData = () => ({
 export const updateLabel = (fieldLabel) => ({
   type: UPDATE_FIELD_LABEL,
   fieldLabel: fieldLabel
+});
+
+export const updateRequiredFieldData = (isChecked) => ({
+  type: UPDATE_FIELD_IS_REQUIRED,
+  isRequiredChecked: isChecked
 });
 
 export const updateDefaultValue = (defaultValue) => ({

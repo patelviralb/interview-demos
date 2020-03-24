@@ -3,12 +3,14 @@ import {connect} from "react-redux";
 import {
   clearFieldData,
   updateLabel,
+  updateRequiredFieldData,
   updateDefaultValue,
   updateChoicesWithDefaultValue,
   updateChoices,
   deleteChoice
 } from "../../../../redux/actions/fieldsActions";
 import {Link} from "react-router-dom";
+import FieldDataService from "../../../../services";
 
 const sleep = (time) => {
   return new Promise((resolve) => setTimeout(resolve, time));
@@ -18,18 +20,38 @@ const addChoiceToList = (editChoices, fieldData) => {
   const choiceValue = document.getElementById('vp-field-choice').value;
   const defaultValue = document.getElementById('vp-default-value').value;
 
-  const existingChoice = fieldData.choices.filter(eachChoice => eachChoice.choice_value === choiceValue);
+  const existingChoice = fieldData.choices.filter(
+      eachChoice => eachChoice.choice_value === choiceValue);
 
-  if(fieldData.choices.length === 50) {
-    displayError("Cannot add more than 50 choices.");
+  if (fieldData.choices.length === 50) {
+    displayWarning("Cannot add more than 50 choices.");
   } else if (choiceValue.trim() === defaultValue) {
-    displayError("Default value present. Cannot add same value again.");
-  } else if(existingChoice.length !== 0) {
-    displayError("Value is present. Cannot add same value again.");
+    displayWarning("Default value present. Cannot add same value again.");
+  } else if (existingChoice.length !== 0) {
+    displayWarning("Value is present. Cannot add same value again.");
   } else if (choiceValue.trim() !== '') {
     editChoices(choiceValue.trim());
   }
   document.getElementById('vp-field-choice').value = "";
+  document.getElementById('vp-field-choice').focus();
+};
+
+const saveFieldData = (postData, fieldData) => {
+  const labelData = document.getElementById('vp-field-label').value;
+
+  if (labelData === "") {
+    displayError("Label field cannot be empty.")
+  } else {
+    postData(fieldData);
+  }
+};
+
+const displayWarning = (message) => {
+  document.getElementById('vp-warning-row').classList.remove('d-none');
+  document.getElementById(
+      'vp-warning-message').innerHTML = message;
+  sleep(2000).then(
+      () => document.getElementById('vp-warning-row').classList.add('d-none'));
 };
 
 const displayError = (message) => {
@@ -40,14 +62,30 @@ const displayError = (message) => {
       () => document.getElementById('vp-error-row').classList.add('d-none'));
 };
 
-const MultipleChoiceBuilderComponent = ({fieldData, clearFormFieldData, editLabel, editRequiredValidation, editDefaultValue, editChoices, removeChoice, editOrder}) =>
+const MultipleChoiceBuilderComponent = ({fieldData, clearFormFieldData, editLabel, editRequiredValidation, editDefaultValue, editChoices, removeChoice, editOrder, postData}) =>
     <div className={'border border-warning rounded mt-2 mb-4'}>
 
-      <div className={'row m-2 alert alert-warning d-none'} id={'vp-error-row'}>
+      <div className={'row m-2 alert alert-warning d-none'}
+           id={'vp-warning-row'}>
         <div
             className={'col-12 d-flex justify-content-center'}
             role={'alert'}
-            id={'vp-error-division'}
+        >
+          <i className="fas fa-exclamation-triangle"></i>
+        </div>
+        <div
+            className={'col-12 d-flex justify-content-center'}
+            role={'alert'}
+            id={'vp-warning-message'}
+        >
+          Warning goes here.
+        </div>
+      </div>
+
+      <div className={'row m-2 alert alert-danger d-none'} id={'vp-error-row'}>
+        <div
+            className={'col-12 d-flex justify-content-center'}
+            role={'alert'}
         >
           <i className="fas fa-exclamation-triangle"></i>
         </div>
@@ -189,7 +227,9 @@ const MultipleChoiceBuilderComponent = ({fieldData, clearFormFieldData, editLabe
       </div>
 
       <div className={'row m-2 d-flex justify-content-center'}>
-        <button className={' btn btn-success'}>
+        <button className={' btn btn-success'}
+                onClick={() => saveFieldData(postData, fieldData)}
+        >
           Save Changes
         </button>
         <button className={' ml-2 btn btn-warning'}
@@ -220,12 +260,12 @@ const dispatchMapper = (dispatch) => {
     },
     editRequiredValidation: (isChecked) => {
       //DO SOMETHING
-      console.log("DEBUG: Checked", isChecked);
+      dispatch(updateRequiredFieldData(isChecked));
     },
     editDefaultValue: (defaultValue, postChanges) => {
       if (postChanges) {
         if (defaultValue !== "") {
-          dispatch(updateChoicesWithDefaultValue(defaultValue));
+          dispatch(updateChoicesWithDefaultValue(defaultValue.trim()));
         }
       } else {
         dispatch(updateDefaultValue(defaultValue));
@@ -242,6 +282,11 @@ const dispatchMapper = (dispatch) => {
     },
     editOrder: () => {
       //DO NOTHING
+    },
+    postData: (fieldData) => {
+      FieldDataService.postFieldData(fieldData).then(status =>
+          console.log("Field Data which was posted:",{fieldData})
+      )
     }
   };
 };

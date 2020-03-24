@@ -3,27 +3,28 @@ import {
   SAVE_FIELD,
   UPDATE_FIELD_LABEL,
   UPDATE_FIELD_DEFAULT_VALUE,
-  UPDATE_FIELD_DEFAULT_VALUE_CHOICE, UPDATE_FIELD_CHOICE, DELETE_FIELD_CHOICE
+  UPDATE_FIELD_DEFAULT_VALUE_CHOICE,
+  UPDATE_FIELD_CHOICE,
+  DELETE_FIELD_CHOICE,
+  UPDATE_FIELD_IS_REQUIRED
 } from '../actions/fieldsActions';
 
 const initialState = {
   fieldData: {
-    "label": "Sample Label",
+    "label": "Sales region",
     "type": "multi-select",
     "required": false,
-    "default_value": "Value 01",
+    "default_value": "North America",
     "choices": [
-      {
-        "choice_value": "Value 01"
-      },
-      {
-        "choice_value": "Value 02"
-      },
-      {
-        "choice_value": "Value 03"
-      }
+      {"choice_value": "Asia"},
+      {"choice_value": "Australia"},
+      {"choice_value": "Western Europe"},
+      {"choice_value": "North America"},
+      {"choice_value": "Eastern Europe"},
+      {"choice_value": "Latin America"},
+      {"choice_value": "Middle East and Africa"}
     ],
-    "order": "alphabetical"
+    "displayAlpha": true
   }
 };
 
@@ -48,6 +49,15 @@ const fieldBuilderReducer = (state = initialState, action) => {
         fieldData: {
           ...state.fieldData,
           "label": action.fieldLabel
+        }
+      };
+
+    case UPDATE_FIELD_IS_REQUIRED:
+      return {
+        ...state,
+        fieldData: {
+          ...state.fieldData,
+          "required": action.isRequiredChecked
         }
       };
 
